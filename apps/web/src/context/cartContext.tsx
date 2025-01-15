@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import axios from "axios";
 
 export type Category = {
@@ -38,7 +44,9 @@ type CartContextType = {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [cart, setCart] = useState<CartProductItem[]>([]);
   const [voucherDiscount, setVoucherDiscount] = useState(0);
   const [referralDiscount, setReferralDiscount] = useState(0);
@@ -133,7 +141,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Hapus produk dari cart dan sinkronkan dengan API
   const removeFromCart = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:8000/v1/api/user/items/${id}`);
+      await axios.delete(`http://localhost:8000/v1/api/user/items/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
       // Setelah berhasil menghapus dari API, perbarui data cart
       await fetchCart();
     } catch (error) {
@@ -199,7 +211,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     0
   );
   const discount = voucherDiscount + referralDiscount;
-  const totalAfterDiscount = totalPrice - discount < 0 ? 0 : totalPrice - discount;
+  const totalAfterDiscount =
+    totalPrice - discount < 0 ? 0 : totalPrice - discount;
 
   return (
     <CartContext.Provider
