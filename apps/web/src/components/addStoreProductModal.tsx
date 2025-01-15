@@ -55,13 +55,32 @@ const AddStoreProductModal: React.FC<AddStoreProductModalProps> = ({
       return;
     }
 
+    // Ambil access token dari localStorage
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("accessToken")
+        : null;
+
+    if (!token) {
+      alert("Access token missing. Silakan login terlebih dahulu.");
+      return;
+    }
+
+    // Buat konfigurasi axios dengan header authorization
+    const axiosConfig = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
     try {
       const res = await axios.post(
         `${BASE_URL}/superadmin/${storeId}/products`,
         {
           productId: selectedProductId,
           stock,
-        }
+        },
+        axiosConfig // Sertakan konfigurasi axios di sini
       );
 
       alert("Produk berhasil ditambahkan ke toko");
