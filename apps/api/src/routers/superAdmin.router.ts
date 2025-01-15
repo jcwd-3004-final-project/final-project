@@ -22,9 +22,7 @@ router.post(
 // Get all stores
 router.get(
   "/stores",
-  //Uncomment middleware JWT jika diperlukan
-  authenticateJwt.authenticateJwt.bind(authenticateJwt),
-  authenticateJwt.authorizeRole("SUPER_ADMIN").bind(authenticateJwt),
+
   superAdminController.getAllStores.bind(superAdminController)
 );
 
